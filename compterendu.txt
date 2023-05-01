@@ -1,0 +1,131 @@
+ex1:
+
+processus 7839 thread principal (main) 140533813864256
+thread 2: 1 PID_processus 7839 TID_thread 140533805467200
+thread 1: 1 PID_processus 7839 TID_thread 140533813859904
+thread 2: 2 PID_processus 7839 TID_thread 140533805467200
+thread 1: 2 PID_processus 7839 TID_thread 140533813859904
+thread 2: 3 PID_processus 7839 TID_thread 140533805467200
+thread 1: 3 PID_processus 7839 TID_thread 140533813859904
+thread 2: 4 PID_processus 7839 TID_thread 140533805467200
+thread 1: 4 PID_processus 7839 TID_thread 140533813859904
+thread 2: 5 PID_processus 7839 TID_thread 140533805467200
+thread 1: 5 PID_processus 7839 TID_thread 140533813859904
+ex2:
+creer des thread qui ecrit un numero
+res:
+2
+3
+5
+8
+1
+4
+7
+0
+9
+6
+
+ex3:
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+void* func1(void * arg)
+{
+    int i;
+    char j=*(char*)arg;
+    
+        printf("%lu a ecrit %c \n",pthread_self(),j );
+        sleep(1);
+    
+    pthread_exit(0);
+}
+void main(int ac,char **av)
+{
+    pthread_t th1,th2;
+    void *ret;
+    if(pthread_create(&th1,NULL,func1,"#") < 0){
+        fprintf(stderr,"pthread_create error for thread 1\n");
+        exit(1);
+    }
+    
+    if(pthread_create (&th2,NULL, func1,"*") < 0){
+        fprintf(stderr,"pthread_create error for thread 2\n");
+        exit(1);
+    }
+    (void)pthread_join (th1,&ret);
+    (void)pthread_join (th2,&ret);
+}
+
+ex4:
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+void* readT(void * arg)
+{
+    printf("donner un nombre \n");
+    scanf("%d",(int*)arg);
+    sleep(1);
+    
+    pthread_exit(0);
+}
+void main(int ac,char **av)
+{
+    pthread_t th1;
+    void *ret;
+    int i;
+    if(pthread_create(&th1,NULL,readT,&i) < 0){
+        fprintf(stderr,"pthread_create error for thread 1\n");
+        exit(1);
+    }
+    (void)pthread_join (th1,&ret);
+    printf("le nombre ecrit est %d \n",i);
+}
+
+ex5:
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+
+
+void* Banek(){
+    printf("i was born today \n");
+    pthread_exit(0);
+}
+
+void* born()
+{
+    printf("i born and am born \n");
+    pthread_t th1;
+    void* ret;
+    if(pthread_create(&th1,NULL,Banek,NULL) < 0){
+        fprintf(stderr,"pthread_create error for thread 1\n");
+        exit(1);
+    }
+    sleep(1);
+    
+    (void)pthread_join (th1,&ret);
+    pthread_exit(0);
+}
+
+
+void main(int ac,char **av)
+{
+    pthread_t th1,th2;
+    void *ret;
+    int i;
+    if(pthread_create(&th1,NULL,Banek,NULL) < 0){
+        fprintf(stderr,"pthread_create error for thread 1\n");
+        exit(1);
+    }
+
+    if(pthread_create(&th2,NULL,born,NULL) < 0){
+        fprintf(stderr,"pthread_create error for thread 1\n");
+        exit(1);
+    }
+    (void)pthread_join (th1,&ret);
+
+}
